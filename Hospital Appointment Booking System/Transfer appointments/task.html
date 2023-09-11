@@ -1,0 +1,73 @@
+<div class="step-text">
+<p><details><summary>Details</summary><div><h5 id="description">Description</h5></div></details></p><p>There are many reasons why people can change their job. Doctors can leave our hospital as well. The Head Physician requested that the program could transfer all the appointments for the doctor who has left the hospital to the Head Physician office.</p><h5 id="objectives">Objectives</h5><ul><li><p>Implement the <code class="language-json">/deleteDoctor?doc={doctor name}</code> endpoint that handles <code class="language-json">DELETE</code> requests to delete a doctor and returns the information about the deleted doctor. All appointments scheduled for this doctor should be transferred to <code class="language-json">director</code>.</p></li></ul><p>Use one of the doctors' names existing in the hospital, which you can get from <code class="language-json">/allDoctorslist</code> endpoint. Use the name as a request parameter. If an appointment with the requested name exists, delete the doctor and return the response status code <code class="language-json">200</code>. The response body should be a JSON object, as in the following example:</p><pre><code class="language-json">{
+    "id": 1,
+    "doctorName": "pamella upperson"
+}
+</code></pre><p>The endpoint should return the response status code <code class="language-json">400</code> if the doctor does not exist in the database. </p><p>There are several restrictions for the <code class="language-json">director</code>. It is not allowed to set appointments for <code class="language-json">director</code>, but it is possible to delete <code class="language-json">director</code> and then all appointments assigned to the Head Physician (<code class="language-json">director</code>) should be deleted as well. </p><div class="alert alert-primary"><p>You need to check if a doctor named " director " exists in the database. If not, then create the doctor with the name “director” and then all appointments scheduled for the deleted doctor should be transferred to <code class="language-json">director</code>.</p></div><h5 id="examples">Examples</h5><p><strong>Example 1:</strong><em> DELETE /deleteDoctor?doc=pamella upperson request if the doctor exists</em></p><p><em>Response:</em> <code class="language-json">200 OK</code></p><p><em>Response body:</em></p><pre><code class="language-json">{
+    "id": 1,
+    "doctorName": "pamella upperson"
+}</code></pre><p><strong>Example 2:</strong><em> DELETE /deleteDoctor?doc=pamella upperson request if the doctor does not exist</em></p><p><em>Response:</em> <code class="language-json">400 Bad Request</code></p><p><em>Response message:</em></p><pre><code class="language-json">Doctor not found</code></pre><p><strong>Example 3:</strong><em> POST /setAppointment request with director</em></p><p><em>Request body:</em></p><pre><code class="language-json">{
+    "doctor": "director",
+    "patient": "Phil Good",
+    "date": "2022-11-03"
+}</code></pre><p><em>Response:</em> <code class="language-json">400 Bad Request</code></p><p><strong>Example 4:</strong><em> GET /appointments before the doctor was deleted from database</em></p><p><em>Response:</em> <code class="language-json">200 OK</code></p><p><em>Response body:</em></p><pre><code class="language-json">[
+    {
+        "idApp": 10,
+        "doctor": "pamella upperson",
+        "patient": "unknown",
+        "date": "2022-11-01"
+    },
+    {
+        "idApp": 13,
+        "doctor": "pamella upperson",
+        "patient": "billi jim",
+        "date": "2022-11-02"
+    },
+    {
+        "idApp": 15,
+        "doctor": "pamella upperson",
+        "patient": "phil good",
+        "date": "2022-11-03"
+    }
+]</code></pre><p><strong>Example 5:</strong><em> GET /appointments after the doctor was deleted from database</em></p><p><em>Response:</em> <code class="language-json">200 OK</code></p><p><em>Response body:</em></p><pre><code class="language-json">[
+    {
+        "idApp": 10,
+        "doctor": "director",
+        "patient": "unknown",
+        "date": "2022-11-01"
+    },
+    {
+        "idApp": 13,
+        "doctor": "director",
+        "patient": "billi jim",
+        "date": "2022-11-02"
+    },
+    {
+        "idApp": 15,
+        "doctor": "director",
+        "patient": "phil good",
+        "date": "2022-11-03"
+    }
+]</code></pre><p><strong>Example 6:</strong><em> DELETE /deleteDoctor?doc=director request to delete director</em></p><p><em>Response:</em> <code class="language-json">200 OK</code></p><p><em>Response body:</em></p><pre><code class="language-json">{
+    "id": 2,
+    "doctorName": "director"
+}</code></pre><p><strong>Example 7:</strong><em> GET /appointments after the director was deleted from the database</em></p><p><em>Response:</em> <code class="language-json">204 No Content</code></p><p><em>Response body:</em></p><p><strong>Example 8:</strong><em> GET /allDoctorslist before pamella upperson was deleted from the database</em></p><p><em>Response:</em> <code class="language-json">200 OK</code></p><p><em>Response Array:</em></p><pre><code class="language-json">[
+    {
+        "id": 1,
+        "doctorName": "pamella upperson"
+    },
+    {
+        "id": 2,
+        "doctorName": "lea wong"
+    }
+]</code></pre><p><strong>Example 9:</strong><em> GET /allDoctorslist after pamella upperson was deleted from the database</em></p><p><em>Response:</em> <code class="language-json">200 OK</code></p><p><em>Response Array:</em></p><pre><code class="language-json">[
+    {
+        "id": 2,
+        "doctorName": "lea wong"
+    },
+    {
+        "id": 3,
+        "doctorName": "director"
+    }
+]</code></pre>
+</div>

@@ -1,0 +1,33 @@
+<div class="step-text">
+<h5 id="description">Description</h5>
+<p>For better management, the Head Physician wants to get access to the information on the doctor’s workload. In this stage, create the appointment statistics: how many appointments per doctor and how many appointments per day.</p>
+<h5 id="objectives">Objectives</h5>
+<p>Implement two endpoints:</p>
+<ul>
+<li>The <code class="java">/statisticsDay</code> endpoint that handles <code class="java">GET</code> requests and returns the information about the number of appointments per one day and;</li>
+<li>The <code class="java">/statisticsDoc</code> endpoint that handles <code class="java">GET</code> requests and returns the information about the number of appointments per doctor.</li>
+</ul>
+<h5 id="examples">Examples</h5>
+<p><strong>Example 1:</strong><em> GET /statisticsDay endpoint that returns statistics of the appointments per day. An example of JSON array response</em></p>
+<p><em>Response:</em> <code class="java">200 OK</code></p>
+<pre><code class="java">[ {
+  "2022-10-15" : 2
+}, {
+  "2022-10-14" : 2
+}, {
+  "2022-10-17" : 1
+} ]</code></pre>
+<p><strong>Example 2:</strong><em> GET /statisticsDoc endpoint that returns statistics of the appointments per doctor. An example of JSON array response</em></p>
+<p><em>Response:</em> <code class="java">200 OK</code></p>
+<pre><code class="java">[ {
+  "director" : 1
+}, {
+  "lea wong" : 1
+}, {
+  "pamela upperson" : 3
+} ]</code></pre>
+<p><strong>Example 3:</strong><em> GET /statisticsDoc if no appointments were set</em></p>
+<p><em>Response:</em> <code class="java">204 No Content</code></p>
+<p><strong>Example 4:</strong><em> GET /statisticsDay if no appointments were set</em></p>
+<p><em>Response:</em> <code class="java">204 No Content</code></p>
+</div>

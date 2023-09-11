@@ -1,0 +1,83 @@
+<div class="step-text">
+<p></p><h5 id="description">Description</h5><p>In this project, we'll create a program with the REST service. First, create a Spring project using Spring Boot. Copy the following dependencies to your <em>build.gradle</em> file (they are already included in our study project): </p><ol><li><p><code class="language-json">spring-boot-starter</code> — the core starter with the autoconfiguration support, logging and YAML;</p></li><li><p><code class="language-json">spring-boot-starter-web</code> — the starter for building web, including <code class="language-json">RESTful</code>, applications using Spring MVC. It uses <code class="language-json">Tomcat</code> as the default embedded container.</p></li></ol><p>In this stage, you need to create three endpoints that will return information about appointments to the doctor in JSON format. </p><h5 id="objectives">Objectives</h5><p>In the first stage, you need to develop a program that creates appointments to the doctor, deletes the appointments, and shows all set appointments via the API. Implement three endpoints:</p><ul><li><p>Implement the <code class="language-json">/setAppointment</code> endpoint that handles <code class="language-json">POST</code> requests to create a new appointment and returns information about the appointment.</p></li></ul><p>A request should contain the following body:</p><pre><code class="language-json">{
+    "doctor": "Name of the doctor",
+    "patient": "Name of the patient",
+    "date": "date of visite : 2021-12-01"
+}</code></pre><p>Take these variables and store them for the appointment. The response body should be a JSON object, as the following example (doctor and patient in the lower case):</p><pre><code class="language-json">{
+    "idApp": 1,
+    "doctor": "pamela upperson",
+    "patient": "john galt",
+    "date": "2021-12-01"
+}</code></pre><p>Where:</p><ul><li><p><code class="language-json">idApp</code> is paired with the value of the unique ID assigned to the appointment in the number format;</p></li><li><p><code class="language-json">doctor</code> is paired with the value of the doctor's name in the request body that is stored in the appointment, with the mentioned <code class="language-json">idApp</code> in the string format;</p></li><li><p><code class="language-json">patientName</code> is paired with the value of the patient's name in the request body that is stored in the appointment, with the mentioned <code class="language-json">idApp</code> in the string format;</p></li><li><p><code class="language-json">date</code> is paired with the value of the appointment date in the request body that is stored in the appointment with the mentioned <code class="language-json">idApp</code> in the string format.</p></li></ul><p>The endpoint should return the response status code <code class="language-json">200</code>. If the request body has mistakes, for example, an empty name or wrong data format, the endpoint should return the response status code <code class="language-json">400</code>.</p><ul><li><p>Implement the <code class="language-json">/deleteAppointment/?id={N}</code> endpoint that handles <code class="language-json">DELETE</code> requests to delete an appointment and returns the information about the deleted appointment.</p></li></ul><p>To delete an appointment, please use the ID assigned to the appointment when it was created. Use the ID as the request parameter. If an appointment with the requested ID exists, delete the appointment and return the response status code <code class="language-json">200</code>.  The response body should be a JSON object, as in the following example:</p><pre><code class="language-json">{
+    "idApp": 1,
+    "doctor": "pamela upperson",
+    "patient": "john galt",
+    "date": "2021-12-01"
+}</code></pre><p>Where:</p><ul><li><p><code class="language-json">idApp</code> is paired with the value of the unique ID assigned to the appointment in the number format;</p></li><li><p><code class="language-json">doctor</code> is paired with the value of the doctor's name in the request body that is stored in the appointment, with the mentioned <code class="language-json">idApp</code> in the string format;</p></li><li><p><code class="language-json">patientName</code> is paired with the value of the patient's name in the request body that is stored in the appointment, with the mentioned <code class="language-json">idApp</code> in the string format;</p></li><li><p><code class="language-json">date</code> is paired with the value of the appointment date in the request body that is stored in the appointment with the mentioned <code class="language-json">idApp</code> in the string format.</p></li></ul><p>If an appointment with the requested ID does not exist or is deleted, return the response status code <code class="language-json">400</code> and the JSON object as in the following example:</p><pre><code class="language-json">{
+   "error": "The appointment does not exist or was already cancelled"
+}</code></pre><ul><li><p>Implement the <code class="language-json">/appointments</code> endpoint that handles <code class="language-json">GET</code> requests and returns the information about all appointments. The endpoint does not accept any JSON body or parameters and returns a <code class="language-json">JsonArray</code> with all created appointments.</p></li></ul><p>The endpoint should return the response status code <code class="language-json">200</code> if you have a scheduled appointment and the response status code <code class="language-json">204</code> if you don't have anything.</p><p>The response is a JSON array that contains a set of JSON objects. Each JSON object should contain the following name/value pairs: </p><pre><code class="language-json">
+[
+    {
+        "idApp": 7,
+        "doctor": "lea wong",
+        "patient": "ay bolit",
+        "date": "2022-10-30"
+    },
+    {
+        "idApp": 19,
+        "doctor": "pamela upperson",
+        "patient": "indi grimes",
+        "date": "2022-10-30"
+    },
+    {
+        "idApp": 24,
+        "doctor": "dr. house",
+        "patient": "unknown",
+        "date": "2022-10-30"
+    }
+]
+</code></pre><p>Request and response entity-header <code class="language-json">Content-Type</code> of all the API endpoints should be equal to <code class="language-json">application/json</code>.</p><h5 id="examples">Examples</h5><p><strong>Example 1:</strong><em> POST /setAppointment request</em></p><p><em>Request body:</em></p><pre><code class="language-json">{
+    "doctor": "Dr. House",
+    "patient": "Unknown",
+    "date": "2022-10-30"
+}</code></pre><p><em>Response:</em> <code class="language-json">200 OK</code></p><p><em>Response body:</em></p><pre><code class="language-json">{
+    "idApp": 24,
+    "doctor": "dr. house",
+    "patient": "unknown",
+    "date": "2022-10-30"
+}</code></pre><p><strong>Example 2:</strong><em> POST /setAppointment request with null "doctor" attribute</em></p><p><em>Request body:</em></p><pre><code class="language-json">{
+
+    "patient": "Unknown",
+    "date": "2022-10-30"
+}</code></pre><p><em>Response:</em> <code class="language-json">400 Bad Request</code></p><p><strong>Example 3:</strong><em> POST /setAppointment request with empty "doctor" attribute</em></p><p><em>Request body:</em></p><pre><code class="language-json">{
+    "doctor": "    ",
+    "patient": "Unknown",
+    "date": "2022-10-30"
+}</code></pre><p><em>Response:</em> <code class="language-json">400 Bad Request</code></p><p><strong>Example 4:</strong><em> DELETE /deleteAppointment?id=1 request</em></p><p><em>Response body with the information on the deleted appointment:</em></p><pre><code class="language-json">{
+    "idApp": 7,
+    "doctor": "lea wong",
+    "patient": "ay bolit",
+    "date": "2022-10-30"
+}</code></pre><p><strong>Example 5:</strong><em> DELETE  /deleteAppointment?id=1 request</em></p><p><em>Response body if the appointment does not exist with such ID number:</em></p><p><em>Response:</em> <code class="language-json">400 Bad Request</code></p><pre><code class="language-json">{
+    "error": "The appointment does not exist or was already cancelled"
+}</code></pre><p><strong>Example 6:</strong><em> GET /appointments request</em></p><p><em>The response body with all appointments :</em></p><pre><code class="language-json">[
+    {
+        "idApp": 19,
+        "doctor": "pamela upperson",
+        "patient": "indi grimes",
+        "date": "2022-10-30"
+    },
+    {
+        "idApp": 24,
+        "doctor": "dr. house",
+        "patient": "unknown",
+        "date": "2022-10-30"
+    },
+    {
+        "idApp": 25,
+        "doctor": "dr. house",
+        "patient": "unknown",
+        "date": "2022-10-30"
+    }
+]</code></pre>
+</div>

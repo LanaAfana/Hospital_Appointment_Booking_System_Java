@@ -1,0 +1,163 @@
+<div class="step-text">
+<h5 id="description">Description</h5>
+<p>In the first stage, you have created the <code class="language-json">/setAppointment</code> endpoint that could accept any string data to define a doctor and date. At this stage, let’s add an option that appointments can be set only for the existing doctors in the hospital and only in available time slots.</p>
+<p>For persistence, put appointments and doctors of the hospital in the database. We recommend you an H2 database.</p>
+<p>Use the following configuration in your project:</p>
+<pre><code class="language-json">spring.datasource.url=jdbc:h2:file:../d
+spring.datasource.driverClassName=org.h2.Driver
+
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+
+spring.h2.console.enabled=true
+spring.h2.console.settings.trace=false
+spring.h2.console.settings.web-allow-others=false
+
+spring.jpa.show-sql=true
+</code></pre>
+<h5 id="objectives">Objectives</h5>
+<p>In the second stage, you need to add endpoints that create a record with a new doctor, shows all doctors in the hospital, and shows the schedule of available time slots for a doctor. Implement three endpoints:</p>
+<ul>
+<li>
+<p>Implement the <code class="language-json">/newDoctor</code> endpoint that handles <code class="language-json">POST</code> requests to add a new doctor and returns information about the doctor.</p>
+</li>
+</ul>
+<p>A request should contain the following body:</p>
+<pre><code class="language-json">{
+    "doctorName": "Lea Wong"
+}</code></pre>
+<p>Take these variables and store them for the doctor. The response body should be a JSON object, as in the following example (doctor and patient names are in the lower case):</p>
+<pre><code class="language-json">{
+    "id": 1,
+    "doctorName": "lea wong"
+}</code></pre>
+<ul>
+<li><code class="language-json">id</code> is paired with the value of the unique ID assigned to the doctor in Number format,</li>
+<li><code class="language-json">doctorName</code> is paired with value of a doctor name in the request body that is stored in the database with the mentioned <code class="language-json">id</code> in the string format in lower case;</li>
+</ul>
+<p>The endpoint should return the response status code <code class="language-json">200</code>. If the doctor already exists or if the request body has mistakes (lack of attribute, empty doctor's name, etc.), the endpoint should return the response status code <code class="language-json">400</code>.</p>
+<ul>
+<li>Implement the <code class="language-json">/allDoctorslist</code> endpoint that handles <code class="language-json">GET</code> requests and returns the information about all available doctors in the hospital.</li>
+</ul>
+<p>The endpoint does not accept any JSON body or parameters and returns a JSON array with the created doctors<em>. </em>The endpoint should return the response status code <code class="language-json">200</code> if the doctors' list is not empty. If there are no doctor names in the database, then the response status code should be  <code class="language-json">204</code>.</p>
+<p>The response should be as a JSON Array which contains a set of JSON objects. Each JSON object should contain the following name/value pairs:</p>
+<pre><code class="language-json">
+[
+    {
+        "id": 1,
+        "doctorName": "lea wong"
+    },
+    {
+        "id": 2,
+        "doctorName": "pamella upperson"
+    }
+]
+</code></pre>
+<ul>
+<li>Implement the <code class="language-json">/availableDatesByDoctor?doc={doctorName}</code> endpoint that handles <code class="language-json">GET</code> requests and returns the information about available time slots for a doctor.</li>
+</ul>
+<p>Use one of the doctors' names existing in the hospital, which you can get from <code class="language-json">/allDoctorslist</code> endpoint. Use the name as a request parameter. If a doctor with the requested name exists, show the available days to set appointments to the choosen doctor and return response status code <code class="language-json">200</code>. The response body should be a JSON array, as in the following example:</p>
+<pre><code class="language-json">[
+    {
+        "availabletime": "2022-10-31",
+        "booked": false
+    },
+    {
+        "availabletime": "2022-11-01",
+        "booked": false
+    },
+    {
+        "availabletime": "2022-11-02",
+        "booked": false
+    },
+    {
+        "availabletime": "2022-11-03",
+        "booked": false
+    }
+]
+</code></pre>
+<p>The endpoint should return the response status code <code class="language-json">404</code> if the doctor does not exist in the database. The response should be as a JSON array that contains a set of JSON objects. Each JSON object should contain the following name/value pairs: </p>
+<ul>
+<li><code class="language-json">availabletime</code> is paired with value of data in the local date format (<code class="language-json">yyyy-MM-dd</code>);</li>
+<li><code class="language-json">booked</code> is paired with a boolean value. If the date is available, <code class="language-json">booked</code> is <code class="language-json">false</code>, otherwise <code class="language-json">true</code>.</li>
+</ul>
+<p>In our project for simplicity, there should be four available days for a doctor appointment (one day for one appointment). Available appointments days should start from the next day from the date when you trying to set the appointment. </p>
+<p>Request and response entity header <code class="language-json">Content-Type</code> of all the API endpoints should be equal to <code class="language-json">application/json</code>.</p>
+<h5 id="examples">Examples</h5>
+<p><strong>Example 1:</strong><em> POST /newDoctor request</em></p>
+<p><em>Request body:</em></p>
+<pre><code class="language-json">{
+    "doctorName": "Lea Wong"
+}</code></pre>
+<p><em>Response:</em> <code class="language-json">200 OK</code></p>
+<p><em>Response body:</em></p>
+<pre><code class="language-json">{
+ "id": 1,
+ "doctorName": "lea wong"
+}</code></pre>
+<p><strong> Example 2:</strong><em> POST /newDoctorrequest with null "doctor" attribute</em></p>
+<p><em>Request body:</em></p>
+<pre><code class="language-json">{
+
+}</code></pre>
+<p><em>Response:</em> <code class="language-json">400 Bad Request</code></p>
+<p><strong> Example 3:</strong><em> POST /setAppointment request with empty "doctor" attribute</em></p>
+<p><em>Response body:</em></p>
+<pre><code class="language-json">{
+    "doctorName": "",
+}</code></pre>
+<p><em>Response:</em> <code class="language-json">400 Bad Request</code></p>
+<p><strong>Example 4:</strong><em> GET /allDoctorslist request</em></p>
+<p><em>Response:</em> <code class="language-json">200 OK</code></p>
+<p><em>Response body:</em></p>
+<pre><code class="language-json">[
+    {
+        "id": 1,
+        "doctorName": "lea wong"
+    },
+    {
+        "id": 2,
+        "doctorName": "pamella upperson"
+    }
+]</code></pre>
+<p><strong> Example 5:</strong><em> GET /availableDatesByDoctor?doc=pamella upperson request</em></p>
+<p><em>Response body if the doctor exists and no one appointment is set for the available days:</em></p>
+<pre><code class="language-json">[
+    {
+        "availabletime": "2022-10-31",
+        "booked": false
+    },
+    {
+        "availabletime": "2022-11-01",
+        "booked": false
+    },
+    {
+        "availabletime": "2022-11-02",
+        "booked": false
+    },
+    {
+        "availabletime": "2022-11-03",
+        "booked": false
+    }
+]</code></pre>
+<p><strong>Example 5:</strong><em> GET /availableDatesByDoctor?doc=pamella upperson request</em></p>
+<p><em>Response body if the doctor exists and appointments are set for the available days:</em></p>
+<pre><code class="language-json">[
+    {
+        "availabletime": "2022-10-31",
+        "booked": true
+    },
+    {
+        "availabletime": "2022-11-01",
+        "booked": true
+    },
+    {
+        "availabletime": "2022-11-02",
+        "booked": true
+    },
+    {
+        "availabletime": "2022-11-03",
+        "booked": true
+    }
+]</code></pre>
+</div>
